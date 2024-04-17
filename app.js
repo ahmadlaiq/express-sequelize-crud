@@ -3,7 +3,7 @@ const app = express();
 const port = 3000;
 
 // Importing routes
-const CategoriesRouter = require('./routes/categories');
+const CategoriesRouter = require('./routes/catagories');
 
 // Middleware
 app.use(express.json());
