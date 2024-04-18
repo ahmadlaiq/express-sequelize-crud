@@ -14,8 +14,24 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Category.init({
-    name: DataTypes.STRING,
-    description: DataTypes.TEXT
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: {
+        args: true,
+        msg: "Nama kategori sudah ada, silahkan masukkan kategori lain"
+      },
+      validate: {
+        notEmpty: {
+          msg: "Inputan data nama kategori tidak boleh kosong"
+        }
+      }
+    },
+    description:
+    {
+      type: DataTypes.TEXT,
+      allowNull: true
+    }
   }, {
     sequelize,
     modelName: 'Category',
