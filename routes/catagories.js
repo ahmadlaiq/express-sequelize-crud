@@ -2,12 +2,16 @@ const express = require('express');
 const router = express.Router();
 
 const {
-    getAllCategories, storeCategory
+    getAllCategories, getCategoryByID, storeCategory
 } = require('../controllers/catagoryController');
 
 router.get('/', getAllCategories);
 
+router.get('/:id', getCategoryByID);
+
 router.post('/', storeCategory);
+
+
 
 router.get('/filterData', (req, res) => {
     res.send('Route filter data');
