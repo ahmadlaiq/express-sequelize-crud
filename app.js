@@ -3,6 +3,7 @@ const app = express();
 const dotenv = require('dotenv');
 const cors = require('cors');
 const CategoriesRouter = require('./routes/catagories');
+const AuthRouter = require('./routes/auth');
 const morgan = require('morgan');
 
 dotenv.config();
@@ -14,6 +15,7 @@ app.use(cors()); // Enable CORS
 
 // Routing
 app.use('/api/v1/categories', CategoriesRouter);
+app.use('/api/v1/auth', AuthRouter);
 
 // Server
 const port = process.env.PORT || 3000; // Use port from environment variable or default to 3000
