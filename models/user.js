@@ -54,5 +54,8 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'User',
   });
+  User.prototype.CorrectPassword = async (reqPassword, passwordDb) => {
+    return await bcrypt.compareSync(reqPassword, passwordDb);
+  }  
   return User;
 };
