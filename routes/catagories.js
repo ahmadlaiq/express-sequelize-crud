@@ -5,9 +5,11 @@ const {
     getAllCategories, getCategoryByID, storeCategory, updateCategory, deleteCategory
 } = require('../controllers/catagoryController');
 
+const {authMiddleware} = require('../middleware/userMiddleware');
+
 router.get('/', getAllCategories);
 
-router.get('/:id', getCategoryByID);
+router.get('/:id', authMiddleware, getCategoryByID);
 
 router.post('/', storeCategory);
 
