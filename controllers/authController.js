@@ -97,3 +97,38 @@ exports.loginUser = async (req, res) => {
         });
     }
 };
+
+exports.logoutUser = async (req, res) => {
+    res.cookie("jwt", "", {
+        httpOnly: true,
+        expires: new Date(0)
+    });
+
+    res.status(200).json({
+        message: "Logout Berhasil"
+    });
+};
+
+exports.getMyUser = async (req, res) => {
+    try {
+        const currentUser = await User.findByPk(req.user.id);
+
+        if (!currentUser) {
+            return res.status(404).json({
+                message: "User tidak ditemukan"
+            });
+        }
+
+        res.status(200).json({
+            id: currentUser.id,
+            name: currentUser.name,
+            email: currentUser.email,
+            role_id: currentUser.role_id
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            message: "Terjadi kesalahan server"
+        });
+    }
+};
