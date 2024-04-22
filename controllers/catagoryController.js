@@ -1,6 +1,7 @@
 const {
     Category
 } = require('../models');
+const asyncHandle = require('../middleware/asyncHandle');
 
 exports.getAllCategories = async (req, res) => {
     try {
@@ -17,7 +18,7 @@ exports.getAllCategories = async (req, res) => {
     }
 };
 
-exports.getCategoryByID = async (req, res) => {
+exports.getCategoryByID = asyncHandle(async (req, res) => {
     try {
         const {
             id
@@ -39,7 +40,7 @@ exports.getCategoryByID = async (req, res) => {
             error: error.message
         });
     }
-};
+});
 
 exports.storeCategory = async (req, res) => {
     try {
@@ -109,7 +110,7 @@ exports.deleteCategory = async (req, res) => {
         await category.destroy();
         res.status(200).json({
             status: "success",
-            message: "Category " + id +" deleted"
+            message: "Category " + id + " deleted"
         });
     } catch (error) {
         res.status(500).json({
