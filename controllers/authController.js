@@ -15,6 +15,28 @@ const signToken = (id) => {
     });
 };
 
+const createSendToken = (user, statusCode, res) => {
+    const token = signToken(user.id);
+
+    const cookieOptions = {
+        expire: new Date(
+            Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+        ),
+        httpOnly: true
+    };
+
+    res.cookie('jwt', token, cookieOptions);
+
+    res.status(statusCode).json({
+        status: 'success',
+        token,
+        data: {
+            user
+        }
+    });
+
+}
+
 exports.registerUser = async (req, res) => {
     try {
         // Check if password and passwordConfirm match
@@ -30,15 +52,8 @@ exports.registerUser = async (req, res) => {
             email: req.body.email,
             password: req.body.password,
         });
-
-        // Create a token
-        const token = signToken(newUser.id);
-
-        res.status(201).json({
-            message: "Berhasil Register",
-            data: newUser,
-            token,
-        });
+        // Create a token and send it to the user as a response to the registration request
+        createSendToken(newUser, 201, res);
 
     } catch (error) {
         console.error(error);
@@ -71,15 +86,8 @@ exports.loginUser = async (req, res) => {
                 message: "Error: Invalid email or password",
             });
         }
-
-        // Create a token
-        const token = signToken(userData.id);
-
-        return res.status(200).json({
-            status: "Success",
-            message: "Login successful",
-            token,
-        });
+        // If user exists and password is correct, create a token and send it to the user as a response to the login request
+        createSendToken(userData, 200, res);
 
     } catch (error) {
         console.error("Login error:", error);

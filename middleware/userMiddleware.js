@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
-const { User } = require('../models');
+const {
+    User, Role
+} = require('../models');
 
 exports.authMiddleware = async (req, res, next) => {
     let token;
@@ -40,6 +42,24 @@ exports.authMiddleware = async (req, res, next) => {
         });
     }
 
+    req.user = currentUser;
+
     // Token is present, continue to the next middleware
     next();
+};
+
+exports.permissionUser = (...roles) => {
+    return async (req, res, next) => {
+        const rolesData = await Role.findByPk(req.user.role_id);
+
+        const roleName = rolesData.name;
+
+        if (!roles.includes(roleName)) {
+            return next(res.status(403).json({
+                status: 'error',
+                message: 'Anda tidak memiliki akses untuk melakukan aksi ini.',
+            }));
+        }
+        next();
+    };
 };
