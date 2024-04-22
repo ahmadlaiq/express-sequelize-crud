@@ -6,11 +6,13 @@ const CategoriesRouter = require('./routes/catagories');
 const AuthRouter = require('./routes/auth');
 const morgan = require('morgan');
 const {errorHandler, notFound} = require('./middleware/errorMiddleware');
+const cookieParser = require('cookie-parser');
 
 dotenv.config();
 
 // Middleware
 app.use(express.json()); // Parse JSON bodies
+app.use(cookieParser()); // Parse cookies
 app.use(morgan('dev')); // Logging middleware
 app.use(cors()); // Enable CORS
 

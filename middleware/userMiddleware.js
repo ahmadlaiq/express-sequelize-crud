@@ -6,10 +6,12 @@ const {
 exports.authMiddleware = async (req, res, next) => {
     let token;
     // Check if token is present in the Authorization header
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
-        // Extract the token from the Authorization header
-        token = req.headers.authorization.split(' ')[1];
-    }
+    // if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+    //     // Extract the token from the Authorization header
+    //     token = req.headers.authorization.split(' ')[1];
+    // }
+    // Use the token from the cookie
+    token = req.cookies.jwt;
     // If token is not present in the Authorization header, check the request body
     if (!token) {
         return res.status(401).json({
