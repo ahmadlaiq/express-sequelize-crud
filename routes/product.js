@@ -3,7 +3,9 @@ const router = express.Router();
 const {
     createProduct,
     getProducts,
-    getProductById
+    getProductById,
+    updateProduct,
+    deleteProduct
 } = require("../controllers/productController");
 const {
     uploadOption
@@ -12,5 +14,7 @@ const {
 router.post("/", uploadOption.single('image'), createProduct)
 router.get("/", getProducts);
 router.get("/:id", getProductById);
+router.put("/:id", uploadOption.single('image'), updateProduct);
+router.delete("/:id", deleteProduct);
 
 module.exports = router;
