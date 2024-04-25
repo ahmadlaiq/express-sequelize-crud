@@ -1,8 +1,5 @@
 const {
-    where
-} = require('sequelize');
-const {
-    User
+    User, Profile
 } = require('../models');
 
 const jwt = require('jsonwebtoken');
@@ -110,25 +107,29 @@ exports.logoutUser = async (req, res) => {
 };
 
 exports.getMyUser = async (req, res) => {
-    try {
-        const currentUser = await User.findByPk(req.user.id);
-
-        if (!currentUser) {
-            return res.status(404).json({
-                message: "User tidak ditemukan"
-            });
+    const currentUser = await User.findOne({
+        where: {
+            id: req.user.id
+        },
+        include: [{
+            model: Profile,
+            attributes: {
+                exclude: ["userId", "createdAt", "updatedAt"]
+            }
+        }],
+        attributes: {
+            exclude: ["password", "createdAt", "updatedAt"]
         }
+    });
 
-        res.status(200).json({
-            id: currentUser.id,
-            name: currentUser.name,
-            email: currentUser.email,
-            role_id: currentUser.role_id
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({
-            message: "Terjadi kesalahan server"
+    if (!currentUser) {
+        return res.status(404).json({
+            message: "User tidak ditemukan"
         });
     }
+
+    res.status(200).json({
+        status: "success",
+        data: currentUser
+    });
 };
