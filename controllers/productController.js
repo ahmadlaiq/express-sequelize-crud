@@ -1,6 +1,6 @@
 const asyncHandle = require('../middleware/asyncHandle');
 const {
-    Product
+    Product, Category
 } = require("../models");
 const {
     Op
@@ -65,11 +65,28 @@ exports.getProducts = asyncHandle(async (req, res) => {
                 name: {
                     [Op.like]: `%${searchData}%` // Gunakan % sebelum dan setelah searchData
                 }
-            }
+            },
+            include: [
+                {
+                    model: Category,
+                    attributes: {
+                        exclude: ['createdAt', 'updatedAt', 'description']
+                    }
+                }
+            ]
         });
         productsData = products;
     } else {
-        const products = await Product.findAndCountAll();
+        const products = await Product.findAndCountAll({
+            include: [
+                {
+                    model: Category,
+                    attributes: {
+                        exclude: ['createdAt', 'updatedAt', 'description']
+                    }
+                }
+            ]
+        });
         productsData = products;
     }
 
@@ -81,7 +98,16 @@ exports.getProducts = asyncHandle(async (req, res) => {
 // Route for getting details of a single product by ID
 exports.getProductById = asyncHandle(async (req, res) => {
     const id = req.params.id;
-    const productData = await Product.findByPk(id);
+    const productData = await Product.findByPk(id, {
+        include: [
+            {
+                model: Category,
+                attributes: {
+                    exclude: ['createdAt', 'updatedAt', 'description']
+                }
+            }
+        ]
+    });
 
     if (!productData) {
         return res.status(404).json({
