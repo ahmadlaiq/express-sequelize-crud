@@ -2,6 +2,9 @@ const asyncHandle = require('../middleware/asyncHandle');
 const {
     Product
 } = require("../models");
+const {
+    Op
+} = require("sequelize");
 const fs = require('fs');
 
 exports.createProduct = asyncHandle(async (req, res) => {
@@ -39,11 +42,39 @@ exports.createProduct = asyncHandle(async (req, res) => {
     });
 });
 
-// Route for reading all products
+// Route for reading products with optional search, limit, and page
 exports.getProducts = asyncHandle(async (req, res) => {
-    const products = await Product.findAll();
+    const {
+        search,
+        limit,
+        page
+    } = req.query; // Dapatkan nilai dari query string
+
+    let productsData = ""; // Variable untuk menyimpan data produk
+
+    if (search || limit || page) {
+        const pageData = parseInt(page) || 1; // Konversi ke integer, default 1 jika kosong
+        const limitData = parseInt(limit) || 100; // Konversi ke integer, default 100 jika kosong
+        const offsetData = (pageData - 1) * limitData;
+        const searchData = search || "";
+
+        const products = await Product.findAndCountAll({
+            limit: limitData,
+            offset: offsetData,
+            where: {
+                name: {
+                    [Op.like]: `%${searchData}%` // Gunakan % sebelum dan setelah searchData
+                }
+            }
+        });
+        productsData = products;
+    } else {
+        const products = await Product.findAndCountAll();
+        productsData = products;
+    }
+
     return res.status(200).json({
-        data: products
+        data: productsData
     });
 });
 
