@@ -14,6 +14,9 @@ module.exports = (sequelize, DataTypes) => {
       Product.belongsTo(models.Category, {
         foreignKey: 'categoryId',
       });
+      Product.hasMany(models.Review, {
+        foreignKey: 'productId',
+      });
     }
   }
   Product.init({
@@ -88,6 +91,10 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 0,
     },
     countReview: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    avgReview: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     }

@@ -1,5 +1,5 @@
 const {
-    User, Profile
+    User, Profile, Product, Category
 } = require('../models');
 
 const jwt = require('jsonwebtoken');
@@ -115,6 +115,17 @@ exports.getMyUser = async (req, res) => {
             model: Profile,
             attributes: {
                 exclude: ["userId", "createdAt", "updatedAt"]
+            }
+        },
+        {
+            model: Product,
+            as: "historyReview",
+            attributes: {
+                exclude: ["createdAt", "updatedAt", "categoryId"]
+            },
+            include: {
+                model: Category,
+                attributes: ['name']
             }
         }],
         attributes: {

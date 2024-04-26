@@ -1,6 +1,6 @@
 const asyncHandle = require('../middleware/asyncHandle');
 const {
-    Product, Category
+    Product, Category, Review, User, Profile
 } = require("../models");
 const {
     Op
@@ -105,6 +105,24 @@ exports.getProductById = asyncHandle(async (req, res) => {
                 attributes: {
                     exclude: ['createdAt', 'updatedAt', 'description']
                 }
+            },
+            {
+                model: Review,
+                attributes: {
+                    exclude: ['useerId', 'productId']
+                },
+                include: [
+                    {
+                        model: User,
+                        attributes: ['name'],
+                        include: [
+                            {
+                                model: Profile,
+                                attributes: ['age','image']
+                            }
+                        ]
+                    }
+                ]
             }
         ]
     });

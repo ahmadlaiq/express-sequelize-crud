@@ -6,6 +6,7 @@ const CategoriesRouter = require('./routes/catagories');
 const AuthRouter = require('./routes/auth');
 const ProductRouter = require('./routes/product');
 const ProfileRouter = require('./routes/profile');
+const ReviewsRouter = require('./routes/review');
 const morgan = require('morgan');
 const {errorHandler, notFound} = require('./middleware/errorMiddleware');
 const cookieParser = require('cookie-parser');
@@ -26,6 +27,7 @@ app.use('/api/v1/categories', CategoriesRouter);
 app.use('/api/v1/auth', AuthRouter);
 app.use('/api/v1/products', ProductRouter);
 app.use('/api/v1/profiles', ProfileRouter);
+app.use('/api/v1/reviews', ReviewsRouter);
 
 // Error handling
 app.use(notFound);
